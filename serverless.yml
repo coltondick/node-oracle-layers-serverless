@@ -1,0 +1,29 @@
+service: node-oracle-layers # NOTE: update this with your service name
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    DB_USERNAME:
+    DB_PASSWORD:
+    CONNECTION_STRING:
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+layers:
+  oraclelib:
+    path: oraclelib # required, path to layer contents on disk
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: post
+    layers:
+      - { Ref: OraclelibLambdaLayer } # This is the name Cloudformation required, including capital first letter of your declared layers name plus hardcoded 'LambdaLayer', You will have to name this way.
